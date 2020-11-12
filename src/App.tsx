@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import GlobalStyle from './globalStyles';
+import GlobalStyle from './global/globalStyles';
 import { Login, Dashboard, Index, Register} from './pages';
 
 function App() {
