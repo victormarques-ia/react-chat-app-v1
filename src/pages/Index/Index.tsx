@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const Index = () => {
+const Index = (props: { history: string[]; }) => {
+  useEffect(() => {
+    const token = localStorage.getItem('CA_Token');
+    if (!token) {
+      props.history.push("/login");
+    } else {
+      props.history.push("/dashboard");
+    }
+  }, [0]);
   return (
-    <h1>Index</h1>
+    <div></div>
   )
 }
 
