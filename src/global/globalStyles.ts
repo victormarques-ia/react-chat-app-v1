@@ -1,4 +1,9 @@
+import { HTMLAttributes } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+
+interface ButtonProps extends React.DetailsHTMLAttributes<HTMLAttributes<HTMLButtonElement>>{
+  other?: boolean;
+}
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -6,67 +11,87 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
+    outline: none;
   }
 
   body {
-    font-size: 16px;
-  }
-
-  label {
-    font-size: 0.9rem;
-  }
-
-  input {
-    border: none;
-    padding: 0.5rem 0.1rem;
     width: 100%;
-    border-radius: 2px;
-    border-bottom: 1px solid #eee;
-    transition: all 0.5s;
-
-    &:focus {
-      border-bottom: 1px solid #ccc;
-    }
+    height: 100vh;
+    font-size: 16px;
+    background-color: #fafafa; //36393f
+    color: #36393f;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
-  button {
-      background: #f7c52a;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 2px;
-      width: 100%;
-      text-transform: uppercase;
-    }
+  a {
+    text-decoration: none;
+    color: #36393f;
+  }
 `;
 
-export const Card = styled.div`
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+export const Button = styled.button<ButtonProps>`
+  background: ${({ other }) => (!other ? '#17C3B2' : '#F6F6F6')};
+  color: ${({ other }) => (!other ? '#F6F6F6' : '#17C3B2')};
+  border: ${({ other }) => (other ? '1px solid #17C3B2' : 'none')};
+
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
   border-radius: 4px;
+  width: 100%;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: 0.2s;
+
+  &:hover {
+    background: ${({ other }) => (other ? '#17C3B2' : '')};
+    color: ${({ other }) => (other ? '#F6F6F6' : '')};
+  }
+`;
+
+
+export const Input = styled.input`
+  border: none;
+  padding: 1rem 0.5rem;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #36393f;
+  transition: all 0.5s;
+`;
+
+export const Label = styled.label`
+  font-size: 0.9rem;
+`;
+
+export const Div = styled.div``;
+
+export const Card = styled.div`
+  background-color: #F6F6F6;
+  box-shadow: 0 0 0.5em #36393f;
+  border-radius: 8px;
   padding: 1rem;
-  position: relative;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  width: 25vw;
-  transform: translate(-50%, -50%);
+  min-width: 500px;
 `;
 
 export const CardHeader = styled.header`
-  background: #f7c52a;
+  display: flex;
+  justify-content: space-between;
+  background: #17C3B2;
+  color: #F6F6F6;
   padding: 0.75rem 1.5rem;
-  border-radius: 2px;
+  border-radius: 4px;
   text-transform: uppercase;
-  transform: skewY(-4deg);
+  
   font-size: 1.1rem;
   font-weight: bold;
-  display: inline-block;
-  position: absolute;
-  top: -1rem;
-  left: -0.75rem;
 `;
 
 export const CardBody = styled.div`
   margin-top: 2rem;
+  border-radius: 4px;
 `;
 
 export const InputGroup = styled.div`
@@ -82,12 +107,15 @@ export const ChatRoom = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  border-radius: 4px;
 `;
 
-export const Join = styled.div`
-  background: #f7c52a;
+export const Join = styled(Button)`
+  background: #17C3B2;
   padding: 0.25rem 1rem;
-  border-radius: 2px;
+  border-radius: 4px;
+  margin-bottom: 0;
+  cursor: pointer;
 `;
 
 export default GlobalStyle;

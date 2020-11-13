@@ -1,14 +1,15 @@
 import React, { createRef } from 'react'
+import { Link, useHistory } from 'react-router-dom';
 import api from '../../global/api';
-import { Card, CardBody, CardHeader, InputGroup } from '../../global/globalStyles';
+import { Button, Card, CardBody, CardHeader, Input, InputGroup, Label } from '../../global/globalStyles';
 import makeToast from '../../global/toaster';
-import { Label, Input, LoginButton } from './Register.elements';
 
-const Register = (props: { history: string[]; }) => {
+const Register = () => {
 
   const nameRef = createRef<HTMLInputElement>();
   const emailRef = createRef<HTMLInputElement>();
   const passwordRef = createRef<HTMLInputElement>();
+  const history = useHistory();
 
   const registerUser = () => {
     let name;
@@ -28,7 +29,7 @@ const Register = (props: { history: string[]; }) => {
     })
     .then((response) => {
       makeToast('success', response.data.message);
-      props.history.push('/login');
+      history.push('/login');
     })
     .catch((err) => {
       if (
@@ -56,10 +57,13 @@ const Register = (props: { history: string[]; }) => {
         </InputGroup>
         <InputGroup>
           <Label htmlFor="password">Password</Label>
-          <Input type="text" name="password" id="password" placeholder="Yout Password" ref={passwordRef} />
+          <Input type="password" name="password" id="password" placeholder="Your Password" ref={passwordRef} />
         </InputGroup>
       </CardBody>
-      <LoginButton onClick={registerUser}>Register</LoginButton>
+      <Button onClick={registerUser}>Register</Button>
+      <Link to="/login">
+      <Button other>Login</Button>
+      </Link>
     </Card>
   )
 }

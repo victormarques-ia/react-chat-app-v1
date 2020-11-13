@@ -2,11 +2,15 @@ import React, { createRef } from 'react'
 import makeToast from '../../global/toaster';
 import api from '../../global/api';
 
-import { Card, CardBody, CardHeader, InputGroup } from '../../global/globalStyles';
+import { Button, Card, CardBody, CardHeader, Input, InputGroup, Label } from '../../global/globalStyles';
 
-import { Input, Label, LoginButton } from './Login.elements';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-const Login = (props: { history: string[]; }) => {
+interface LoginProps extends RouteComponentProps {
+  setupSocket: () => void
+}
+
+const Login = (props: LoginProps) => {
   const emailRef = createRef<HTMLInputElement>();
   const passwordRef = createRef<HTMLInputElement>();
 
@@ -28,6 +32,7 @@ const Login = (props: { history: string[]; }) => {
       makeToast('success', response.data.message);
       localStorage.setItem('CA_Token', response.data.token);
       props.history.push('/dashboard');
+      props.setupSocket();
     })
     .catch((err) => {
       if (
@@ -52,10 +57,13 @@ const Login = (props: { history: string[]; }) => {
           <Label htmlFor="password">Password</Label>
           <Input type="password" name="password" id="password" placeholder="Your Password" ref={passwordRef} />
         </InputGroup>
-        <LoginButton onClick={loginUser}>Login</LoginButton>
+        <Button onClick={loginUser}>Login</Button>
+        <Link to="/register">
+          <Button other>Register</Button>
+        </Link>
       </CardBody>
     </Card>
   )
 }
 
-export default Login
+export default withRouter(Login);

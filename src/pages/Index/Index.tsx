@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
 
-const Index = (props: { history: string[]; }) => {
+const Index = () => {
+  const history = useHistory();
   useEffect(() => {
     const token = localStorage.getItem('CA_Token');
     if (!token) {
-      props.history.push("/login");
+      history.push("/login");
     } else {
-      props.history.push("/dashboard");
+      history.push("/dashboard");
     }
   }, [0]);
   return (
