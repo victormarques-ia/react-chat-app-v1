@@ -3,15 +3,19 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import api from '../../global/api';
 
 import { CardHeader, Div, Input } from '../../global/globalStyles';
+import makeToast from '../../global/toaster';
+import { useAuth } from '../../hooks/auth';
+import { useSocket } from '../../hooks/socketProvider';
 import { ChatroomContent, Message, OtherMessage, SendButton, ChatroomPage, ChatroomActions, ChatroomSection, OwnMessage, PersonMessage } from './Chatroom.elements';
 
 interface MatchParams {
   id: string;
   name: string;
+  otherUserId: string;
 }
 
 interface ChatroomProps extends RouteComponentProps<MatchParams> {
-  socket: SocketIOClient.Socket | any;
+ 
 }
 
 interface MessageParams {
@@ -20,66 +24,80 @@ interface MessageParams {
   name: string;
 }
 
-const Chatroom = ({ match, socket }: ChatroomProps) => {
-  const chatroomId = match.params.id;
-  const chatroomName = match.params.name;
+const Chatroom = ({ match }: ChatroomProps) => {
+  const { user } = useAuth();
+  const { socket } = useSocket();
+  const conversationId = match.params.id; 
+  const otherUserName = match.params.name;
 
   const [messages, setMessages] = useState<MessageParams[]>([]);
   const messageRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const [userId, setUserId] = useState("");
 
-  const sendMessage = () => { 
+  const sendMessage = async () => { 
+
     if (socket && messageRef.current) {
-      socket.emit("chatroomMessage", {
-        chatroomId,
+      socket.emit("conversationMessage", {
+        conversationId: conversationId,
         message: messageRef.current.value,
       });
-
+      
       messageRef.current.value = "";
 
     }
   }
 
   const findChatroomMessages = async () => {
-    const oldMessages = await api.get(`/message/${chatroomId}`, {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('CA_Token'),
-      }
-    });
+    const oldMessages = await api.get(`/message/${conversationId}`);
 
     setMessages(oldMessages.data);
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("CA_Token");
-    if (token) {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      setUserId(payload.id);
-    }
     if(socket) {
       socket.on('newMessage', (message: MessageParams)=> {
+      
       const newMessages = [...messages, message];
       setMessages(newMessages);
       });
     }
 
-  }, [messages]);
+  }, []);
+
+  const deleteConversation = async () => {
+    // eslint-disable-next-line no-restricted-globals
+    try {
+      if(messages.length < 1) {
+        const response = await api.delete(`/conversation/${conversationId}`);
+        makeToast('success', response.data.message);
+      }
+    } catch (err) {
+      if (
+        err &&
+        err.response &&
+        err.response.data &&
+        err.response.data.message
+      )
+        makeToast('error', err.response.data.message);
+    }
+      
+  }
 
   useEffect(() => {
     
-    if(socket) {
+    if(socket && conversationId) {
       socket.emit('joinRoom', {
-        chatroomId
+        conversationId
       });
+      findChatroomMessages();
     }
 
-    findChatroomMessages();
-
     return () => {
-      if(socket) {
+
+      if(socket && conversationId) {
         socket.emit('leaveRoom', {
-          chatroomId
+          conversationId
         });
+       // deleteConversation();
       }
     }
 
@@ -89,14 +107,14 @@ const Chatroom = ({ match, socket }: ChatroomProps) => {
     <ChatroomPage>
       <ChatroomSection>
         <CardHeader>
-          {chatroomName}
-          <Link to="/dashboard">Voltar</Link>
+          {otherUserName}
+          <Link to="/dashboard">Back</Link>
         </CardHeader>
         <ChatroomContent>
           {messages.map((message, i) => (
             <Message key={i}>
               <PersonMessage>{message.name}</PersonMessage>
-              {userId === message.userId ? 
+              {user._id === message.userId ? 
               <OwnMessage>
                 {message.message}
               </OwnMessage>

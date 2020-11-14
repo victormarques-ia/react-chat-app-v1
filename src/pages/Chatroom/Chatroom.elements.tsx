@@ -66,7 +66,7 @@ export const ChatroomActions = styled.div`
   display: grid;
   grid-template-columns: 1fr 72px;
   grid-gap: 1rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #dadada;
 
   button {
     height: 100%;

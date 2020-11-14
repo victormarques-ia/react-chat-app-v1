@@ -1,48 +1,40 @@
 import React, { createRef } from 'react'
 import makeToast from '../../global/toaster';
-import api from '../../global/api';
 
 import { Button, Card, CardBody, CardHeader, Input, InputGroup, Label } from '../../global/globalStyles';
 
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, useHistory, withRouter } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
+import { useSocket } from '../../hooks/socketProvider';
 
-interface LoginProps extends RouteComponentProps {
-  setupSocket: () => void
-}
 
-const Login = (props: LoginProps) => {
+const Login = () => {
   const emailRef = createRef<HTMLInputElement>();
   const passwordRef = createRef<HTMLInputElement>();
+  const { setupSocket } = useSocket();
+  const { signIn } = useAuth();
+  const history = useHistory();
 
-  const loginUser = () => {
-    let email;
-    let password;
+  const loginUser = async () => {
+    try {
+      let email = '';
+      let password = '';
 
-    if(emailRef.current && passwordRef.current) {
-      email = emailRef.current.value;
-      password = passwordRef.current.value;
+      if(emailRef.current && passwordRef.current) {
+        email = emailRef.current.value;
+        password = passwordRef.current.value;
+      }
+
+      await signIn({ email, password });
+
+      makeToast('success', 'User loged successfully!');
+
+      setupSocket();
+
+      history.push('/dashboard');
+    } catch (err) {
+      makeToast('error', 'Error trying to login try again!');
     }
-
-    api
-    .post('/user/login', {
-      email,
-      password,
-    })
-    .then((response) => {
-      makeToast('success', response.data.message);
-      localStorage.setItem('CA_Token', response.data.token);
-      props.history.push('/dashboard');
-      props.setupSocket();
-    })
-    .catch((err) => {
-      if (
-        err &&
-        err.response &&
-        err.response.data &&
-        err.response.data.message
-      )
-        makeToast('error', err.response.data.message);
-    });
   }
 
   return (

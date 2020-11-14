@@ -1,45 +1,36 @@
 import React, { createRef } from 'react'
 import { Link, useHistory } from 'react-router-dom';
-import api from '../../global/api';
 import { Button, Card, CardBody, CardHeader, Input, InputGroup, Label } from '../../global/globalStyles';
 import makeToast from '../../global/toaster';
+import { useAuth } from '../../hooks/auth';
 
 const Register = () => {
-
+  const { signUp } = useAuth();
   const nameRef = createRef<HTMLInputElement>();
   const emailRef = createRef<HTMLInputElement>();
   const passwordRef = createRef<HTMLInputElement>();
   const history = useHistory();
 
-  const registerUser = () => {
-    let name;
-    let email;
-    let password;
+  const registerUser = async () => {
+    try {
+      let name = '';
+      let email = '';
+      let password = '';
 
-    if(nameRef.current && emailRef.current && passwordRef.current) {
-      name = nameRef.current.value;
-      email = emailRef.current.value;
-      password = passwordRef.current.value;
-    }
+      if(nameRef.current && emailRef.current && passwordRef.current) {
+        email = emailRef.current.value;
+        password = passwordRef.current.value;
+        name = nameRef.current.value;
+      }
 
-    api.post('/user/register', {
-      name,
-      email,
-      password
-    })
-    .then((response) => {
-      makeToast('success', response.data.message);
+      await signUp({ name, email, password });
+
+      makeToast('success', 'User created successfully!');
+
       history.push('/login');
-    })
-    .catch((err) => {
-      if (
-        err &&
-        err.response &&
-        err.response.data &&
-        err.response.data.message
-      )
-        makeToast('error', err.response.data.message);
-    });
+    } catch (err) {
+      makeToast('error', 'Error when trying to register user!');
+    }
   }
 
 

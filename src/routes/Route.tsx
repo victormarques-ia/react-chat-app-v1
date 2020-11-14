@@ -17,7 +17,7 @@ const Route: React.FC<RouteProps> = ({
   ...rest
 }) => {
 
-  const token = localStorage.getItem('CA_Token');
+  const token = localStorage.getItem('@ChatApp:token');
 
   return (
     <ReactDOMRoute
@@ -28,7 +28,7 @@ const Route: React.FC<RouteProps> = ({
         ) : (
           <Redirect
             to={{
-              pathname: isPrivate ? '/' : '/dashboard',
+              pathname: isPrivate ? '/login' : '/dashboard',
               state: { from: location },
             }}
           />
