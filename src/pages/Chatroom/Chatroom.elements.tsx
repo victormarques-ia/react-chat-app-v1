@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Join } from '../../global/globalStyles';
+import { Button } from '../../global/globalStyles';
 
 export const ChatroomPage = styled.div`
   display: grid;
@@ -14,7 +14,8 @@ export const ChatroomSection = styled.section`
   background-color: #F6F6F6;
   display: grid;  
   grid-template-rows: 50px 1fr 65px;
-  width: 35vw;
+  width: 450px;
+  /* width: 35vw; */
   height: 80vh;
   margin: auto;
   border-radius: 4px;
@@ -47,11 +48,11 @@ const BasedMessage = styled.span`
 `;
 
 export const OtherMessage = styled(BasedMessage)`
-  background-color: #779b97;
+  background-color: #b88fda;
 `;
 
 export const OwnMessage = styled(BasedMessage)`
-  background-color: #17C3B2;
+  background-color: #9d4edd;
 `;
 
 export const PersonMessage = styled.span`

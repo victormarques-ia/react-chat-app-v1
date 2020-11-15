@@ -73,6 +73,8 @@ export const AuthProvider: React.FC = ({ children }) => {
     delete api.defaults.headers.authorization;
 
     setData({} as AuthState);
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }, []);
 
 

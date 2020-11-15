@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Switch } from 'react-router-dom';
 import { Chatroom, Dashboard, Login, Register } from '../pages';
 import Route from './Route';

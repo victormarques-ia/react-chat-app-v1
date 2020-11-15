@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Link, useHistory, withRouter } from 'react-router-dom';
 import api from '../../global/api';
 import { Card, CardBody, CardHeader, InputGroup, ChatRooms, ChatRoom, Join, Label, Input, Button, Div } from '../../global/globalStyles'
@@ -20,17 +20,33 @@ const Dashboard = () => {
   const { user, signOut } = useAuth();
   const [conversations, setConversations] = useState<ConversationProps[]>([]);
   const [users, setUsers] = useState<UserProps[]>([]);
+  const [list, setList] = useState(true);
+  const [searchValue, setSearchValue] = useState('');
 
   const history = useHistory();
-
-  const [list, setList] = useState(true);
-  const newChatroomRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const getConversations = async () => {
     try {
       const response = await api.get(`/conversation/${user._id}`);
 
-      setConversations([...response.data]);
+      if(searchValue) {
+      let selectedConversations: ConversationProps[] = [];
+
+      response.data.forEach((conversation: ConversationProps) => {
+        conversation.users.forEach((usr) => {
+          if((usr._id !== user._id && usr.name.toLowerCase().includes(searchValue))) {
+            selectedConversations.push(conversation);
+          }
+        });
+      });
+
+      if(selectedConversations) {
+        setConversations([...selectedConversations]);
+      }
+
+      } else {
+        setConversations([...response.data]);
+      }
 
     } catch (err) {
       if (
@@ -48,8 +64,15 @@ const Dashboard = () => {
     try {
       const response = await api.get('/user');
 
-      const gUsers = response.data.filter((otherUser: UserProps) => otherUser._id !== user._id);
-      setUsers([...gUsers]);
+      const gUsers: UserProps[] = response.data.filter((otherUser: UserProps) => otherUser._id !== user._id);
+      if(searchValue) {
+        const selectedUsers = gUsers.filter((otherUser) => otherUser.name.toLowerCase().includes(searchValue));
+        
+        setUsers([...selectedUsers])
+      } else {  
+
+        setUsers([...gUsers]);
+      }
     } catch (err) {
       if (
         err &&
@@ -84,6 +107,10 @@ const Dashboard = () => {
   
   }
 
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement> ) => {
+    setSearchValue(event.target.value.toLowerCase());
+  }
+
   const deleteConversation = async (id: string) => {
 
     try {
@@ -105,9 +132,10 @@ const Dashboard = () => {
     }
   }
 
+
   useEffect(() => {
-    getConversations();  
-    getUsers();
+      getConversations();  
+      getUsers();
   }, [conversations]);
 
   return (
@@ -118,11 +146,10 @@ const Dashboard = () => {
       </CardHeader>
       <CardBody>
         <InputGroup>
-          <Label htmlFor="chatroomName">Chatroom Name</Label>
-          <Input type="text" name="chatroomName" id="chatroomName" placeholder="Chat CITi - UFPE" ref={newChatroomRef} />
+          <Label htmlFor="searchField">{list ? 'Search for conversations' : 'Search for users'}</Label>
+          <Input type="text" name="searchField" id="searchField" placeholder="Search something..." onChange={handleSearchChange} />
         </InputGroup>
       </CardBody>
-      <Button onClick={() => {}}>Create Chatroom</Button>
       <MenuButtons>
         <MenuBuntton disabled={!!list} active={!list} onClick={() => setList(true)}>Conversations</MenuBuntton>
         <MenuBuntton disabled={!list} active={list} onClick={() => setList(!list)}>Users</MenuBuntton>

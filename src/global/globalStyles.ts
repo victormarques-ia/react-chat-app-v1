@@ -28,14 +28,14 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     text-decoration: none;
-    color: #36393f;
+    color: #333;
   }
 `;
 
 export const Button = styled.button<ButtonProps>`
-  background: ${({ other }) => (!other ? '#17C3B2' : '#F6F6F6')};
-  color: ${({ other }) => (!other ? '#F6F6F6' : '#17C3B2')};
-  border: ${({ other }) => (other ? '1px solid #17C3B2' : 'none')};
+  background: ${({ other }) => (!other ? '#9d4edd' : '#F6F6F6')};
+  color: ${({ other }) => (!other ? '#F6F6F6' : '#9d4edd')};
+  border: ${({ other }) => (other ? '1px solid #9d4edd' : 'none')};
 
   font-weight: 700;
   padding: 0.75rem 1.5rem;
@@ -47,7 +47,7 @@ export const Button = styled.button<ButtonProps>`
   transition: 0.2s;
 
   &:hover {
-    background: ${({ other }) => (other ? '#17C3B2' : '')};
+    background: ${({ other }) => (other ? '#9d4edd' : '')};
     color: ${({ other }) => (other ? '#F6F6F6' : '')};
   }
 `;
@@ -79,7 +79,7 @@ export const Card = styled.div`
 export const CardHeader = styled.header`
   display: flex;
   justify-content: space-between;
-  background: #17C3B2;
+  background: #9d4edd;
   color: #F6F6F6;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -111,7 +111,7 @@ export const ChatRoom = styled.div`
 `;
 
 export const Join = styled(Button)`
-  background: #17C3B2;
+  background: #9d4edd;
   padding: 0.25rem 1rem;
   border-radius: 4px;
   margin-bottom: 0;

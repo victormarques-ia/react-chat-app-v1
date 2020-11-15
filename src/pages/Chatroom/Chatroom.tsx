@@ -42,7 +42,6 @@ const Chatroom = ({ match }: ChatroomProps) => {
       });
       
       messageRef.current.value = "";
-
     }
   }
 
@@ -61,9 +60,9 @@ const Chatroom = ({ match }: ChatroomProps) => {
       });
     }
 
-  }, []);
+  }, [messages, socket]);
 
-  const deleteConversation = async () => {
+  const deleteConversationWithoutMessage = async () => {
     // eslint-disable-next-line no-restricted-globals
     try {
       if(messages.length < 1) {
@@ -97,7 +96,6 @@ const Chatroom = ({ match }: ChatroomProps) => {
         socket.emit('leaveRoom', {
           conversationId
         });
-       // deleteConversation();
       }
     }
 
@@ -108,7 +106,7 @@ const Chatroom = ({ match }: ChatroomProps) => {
       <ChatroomSection>
         <CardHeader>
           {otherUserName}
-          <Link to="/dashboard">Back</Link>
+          <Link to="/dashboard" onClick={deleteConversationWithoutMessage}>Back</Link>
         </CardHeader>
         <ChatroomContent>
           {messages.map((message, i) => (

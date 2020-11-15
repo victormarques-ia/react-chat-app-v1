@@ -19,7 +19,7 @@ export const MenuButtons = styled(Buttons)`
 `;
 
 export const MenuBuntton = styled.button<MenuButtonProps>`
-  color: ${({ active }) => (active ? '#cacaca' : '#17C3B2')};
+  color: ${({ active }) => (active ? '#cacaca' : '#9d4edd')};
   background-color: #f6f6f6;
   font-size: 1rem;
   font-weight: bold;
@@ -27,7 +27,7 @@ export const MenuBuntton = styled.button<MenuButtonProps>`
   cursor: pointer;
 
   &:hover {
-    border-bottom: ${({ active }) => (active ? '1px solid #17C3B2' : 'none')};
+    border-bottom: ${({ active }) => (active ? '1px solid #9d4edd' : 'none')};
   }
 `;
 

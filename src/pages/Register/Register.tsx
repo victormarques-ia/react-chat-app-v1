@@ -27,7 +27,7 @@ const Register = () => {
 
       makeToast('success', 'User created successfully!');
 
-      history.push('/login');
+      history.push('/');
     } catch (err) {
       makeToast('error', 'Error when trying to register user!');
     }
@@ -52,7 +52,7 @@ const Register = () => {
         </InputGroup>
       </CardBody>
       <Button onClick={registerUser}>Register</Button>
-      <Link to="/login">
+      <Link to="/">
       <Button other>Login</Button>
       </Link>
     </Card>
