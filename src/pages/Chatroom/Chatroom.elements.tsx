@@ -48,7 +48,7 @@ const BasedMessage = styled.span`
 `;
 
 export const OtherMessage = styled(BasedMessage)`
-  background-color: #b88fda;
+  background-color: #9374ad;
 `;
 
 export const OwnMessage = styled(BasedMessage)`
